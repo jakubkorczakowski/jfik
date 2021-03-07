@@ -27,7 +27,7 @@ class Scanner:
             # 'labels', 'max_attempts', 'window'
         }  # TODO image regex, ports regex, delay regex, string regex
         token_specification = [
-            ('NUMBER',  r'\d+(\.\d*)?'),    # Integer or decimal number
+            ('NUMBER',  r'\d+(\.\d*)?(?=[ \n])'),    # Integer or decimal number
             ('ASSIGN',  r':(?=[\n ]?)'),
             ('HYPHEN',  r'-'),              # Statement terminator
             ('ID',      r'[A-Z_a-z-]+(?=[ :][ \n])'),      # Identifiers
