@@ -1,0 +1,114 @@
+Szkic gramatyki BNF dla Docker Compose YAML
+
+rojekt 1: Uproszczony walidator dla podzbioru składni plików docker compose w języku YAML. Minimalny zakres sprawdzanej składni powinien obejmować konstrukcje wykorzystujące słowa kluczowe: version, services, build, ports, image, volumes, enviroment, networks i deploy.
+
+Uwaga! Obrona projektu na pierwszym terminie zajęć. Projekt omawiamy będzie na wykładzie.
+
+
+Projekt można pisać w dowolnym języku programowania, ale koncepcyjnie musi to być zgodne z załączonym przykładem. Zwrócić uwagę na:
+
+analiza  składniowa poprzez rekurencyjne wywołanie funkcji (symbole nieterminalne to nazwy funkcji/metod),
+analiza leksykalna wyraźnie oddzielona od analizy składniowej,
+analiza leksykalna zrealizowana w dowolny sposób (while-if-switch, prosty automat skończony, wyrażenia regularne),
+możliwie precyzyjne komunikaty o błędach
+Na obronę projektu proszę przynieść wydrukowaną wersję zaprojektowanej gramatyki w notacji BNF.
+
+DLA PRZYKŁADU Z PARSER
+
+# start -> version_statement program EOF
+
+# program -> statement program
+# program -> eps
+
+# statement -> print_stmt
+# statement -> assign_stmt
+# statement -> if_stmt
+
+# print_stmt -> PRINT value END
+
+# assign_stmt -> ID ASSIGN value END
+
+# value -> NUMBER
+
+# value -> ID
+
+# if_stmt -> IF ID THEN program ENDIF END
+
+=================================================================
+
+DLA COMPOSE
+
+spróbować rozpoznawać indent i dedent w scannerze
+
+<key>: <option>: <value>
+
+
+
+<config>: <value>
+<config>: <option>
+<config>: <config>
+<config>: <list>
+
+<list>
+
+db_space program db_space db_space program
+
+docker-compose config -f "{{ ścieżka do pliku }}"
+
+version
+
+services
+
+volumes
+
+networks
+
+
+# start -> version_stmt program EOF
+
+# program -> statement program
+# program -> eps
+
+# statement -> services_stmt
+# statement -> volumes_stmt
+# statement -> networks_stmt
+
+# version_stmt -> version ASSIGN STRING
+
+# services_stmt -> services ASSIGN INDENT my_list DEDENT
+# services_stmt -> services ASSIGN eps
+
+# my_list -> my_list assign_stmt INDENT elements DEDENT 
+# my_list -> eps
+
+# elements -> elements assign_stmt element 
+# elements -> assign_stmt element
+
+# element -> value
+# element -> INDENT value DEDENT
+# element -> INDENT my_list DEDENT
+# element -> INDENT hyphen_list DEDENT 
+
+# hyphen_list -> hyphen_list hyphen_element
+# hyphen_list -> hyphen_element
+
+# hyphen_element -> HYPHEN value
+
+# assign_stmt -> ID ASSIGN
+# assign_stmt -> volumes ASSIGN
+# assign_stmt -> build ASSIGN
+# assign_stmt -> ports ASSIGN
+# assign_stmt -> image ASSIGN
+# assign_stmt -> enviroment ASSIGN
+# assign_stmt -> networks ASSIGN
+# assign_stmt -> deploy ASSIGN
+
+# volumes_stmt -> volumes ASSIGN INDENT my_list DEDENT
+# volumes_stmt -> volumes ASSIGN 
+
+# networks_stmt -> networks ASSIGN INDENT my_list DEDENT
+# networks_stmt -> networks ASSIGN 
+
+# value -> STRING
+# value -> NUMBER
+
